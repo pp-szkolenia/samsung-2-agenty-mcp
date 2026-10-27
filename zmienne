@@ -1,0 +1,21 @@
+# MCP Inspector proxy token.
+INSPECTOR_TOKEN=c499d
+
+4388912
+
+ee35266af79856a2eab4
+
+# OpenRouter (used by the Pydantic AI agent).
+OPENROUTER=sk-or-v1-
+3d980657fa27fe4ed504
+767bf31a556719950316a09
+...
+b477bb8982832299a0d55
+
+# Host ports (change if they collide with something else on your machine).
+MCP_SERVER_PORT=8765
+INSPECTOR_UI_PORT=6374
+INSPECTOR_PROXY_PORT=6377
+
+# MCP server URL used by the agent (host side).
+MCP_SERVER_URL=http://localhost:8765/mcp
