@@ -1,0 +1,39 @@
+services:
+  mcp-server:
+    build: .
+    # Dev mode: restart the server whenever a file in ./servers changes.
+    command:
+      - uv
+      - run
+      - --no-sync
+      - fastmcp
+      - run
+      - servers/demo/server.py
+      - --transport=http
+      - --host=0.0.0.0
+      - --port=8000
+      - --reload
+      - --reload-dir=servers
+      - --skip-env
+      - --no-banner
+    ports:
+      - "127.0.0.1:${MCP_SERVER_PORT:-8765}:8000"
+    volumes:
+      - ./servers:/app/servers:ro
+    restart: unless-stopped
+
+  mcp-inspector:
+    image: node:22-slim
+    command: ["npx", "-y", "@modelcontextprotocol/inspector@2.12.0"]
+    environment:
+      HOST: 127.0.0.1
+      CLIENT_PORT: ${INSPECTOR_UI_PORT:-6374}
+      SERVER_PORT: ${INSPECTOR_PROXY_PORT:-6377}
+      ALLOWED_ORIGINS: http://localhost:${INSPECTOR_UI_PORT:-6374}
+      MCP_PROXY_AUTH_TOKEN: ${INSPECTOR_TOKEN:?set INSPECTOR_TOKEN in .env}
+    # Host networking lets the Inspector bind to loopback only (it refuses 0.0.0.0)
+    # and reach the MCP server at http://localhost:${MCP_SERVER_PORT}/mcp.
+    network_mode: host
+    depends_on:
+      - mcp-server
+    restart: unless-stopped
