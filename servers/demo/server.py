@@ -1,26 +1,17 @@
-"""Minimal demo MCP server exposed over streamable HTTP."""
+"""Minimal demo MCP server exposed over streamable HTTP.
+
+Tools, resources and prompts are discovered from the ``components`` directory.
+"""
+
+from pathlib import Path
 
 from fastmcp import FastMCP
+from fastmcp.server.providers import FileSystemProvider
 
-mcp = FastMCP("demo")
-
-
-@mcp.tool
-def add(a: int, b: int) -> int:
-    """Add two integers."""
-    return a + b
-
-
-@mcp.tool
-def greet(name: str) -> str:
-    """Return a greeting for the given name."""
-    return f"Hello, {name}!"
-
-
-@mcp.resource("demo://about")
-def about() -> str:
-    """Short description of this server."""
-    return "Demo MCP server built with FastMCP."
+mcp = FastMCP(
+    "demo",
+    providers=[FileSystemProvider(Path(__file__).parent / "components")],
+)
 
 
 if __name__ == "__main__":
